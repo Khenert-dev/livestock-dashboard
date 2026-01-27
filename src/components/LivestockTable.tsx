@@ -10,7 +10,7 @@ export default function LivestockTable({ data }: Props) {
   return (
     <div className="card shadow-sm">
       <div className="card-body">
-        <h6 className="fw-bold mb-3 text-success">
+        <h6 className="fw-bold text-success mb-3">
           📋 Livestock Overview
         </h6>
 
@@ -28,8 +28,7 @@ export default function LivestockTable({ data }: Props) {
 
             <tbody>
               {data.map((animal) => {
-                // Status is derived from movement monitoring
-                const isInactive =
+                const needsCheck =
                   animal.id === 2 || animal.id === 5;
 
                 return (
@@ -37,9 +36,8 @@ export default function LivestockTable({ data }: Props) {
                     <td>{animal.id}</td>
                     <td>{animal.type}</td>
                     <td>{animal.zone}</td>
-
                     <td>
-                      {isInactive ? (
+                      {needsCheck ? (
                         <span className="badge bg-warning text-dark">
                           ⚠ Needs Check
                         </span>
@@ -49,7 +47,6 @@ export default function LivestockTable({ data }: Props) {
                         </span>
                       )}
                     </td>
-
                     <td>{animal.weight}</td>
                   </tr>
                 );
@@ -59,7 +56,7 @@ export default function LivestockTable({ data }: Props) {
         </div>
 
         <small className="text-muted">
-          Status is based on prolonged inactivity detection.
+          Status is derived from inactivity monitoring.
         </small>
       </div>
     </div>
