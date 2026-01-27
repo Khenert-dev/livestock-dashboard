@@ -1,13 +1,15 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
+import type { ReactNode } from "react";
 
 export default function RootLayout({
-  children
+  children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-light">{children}</body>
     </html>
   );
 }
