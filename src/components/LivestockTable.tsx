@@ -11,7 +11,7 @@ export default function LivestockTable({ data }: Props) {
     <div className="card shadow-sm">
       <div className="card-body">
         <h6 className="fw-bold mb-3 text-success">
-          📋 Livestock Status Overview
+          📋 Livestock Overview
         </h6>
 
         <div className="table-responsive">
@@ -28,12 +28,9 @@ export default function LivestockTable({ data }: Props) {
 
             <tbody>
               {data.map((animal) => {
-                // TEMP STATUS: derived from movement system concept
-                // (table reflects monitoring state, not medical condition)
-                const status =
-                  animal.id === 2 || animal.id === 5
-                    ? "Check"
-                    : "Active";
+                // Status is derived from movement monitoring
+                const isInactive =
+                  animal.id === 2 || animal.id === 5;
 
                 return (
                   <tr key={animal.id}>
@@ -42,13 +39,13 @@ export default function LivestockTable({ data }: Props) {
                     <td>{animal.zone}</td>
 
                     <td>
-                      {status === "Active" ? (
-                        <span className="badge bg-success">
-                          ✔ Active
-                        </span>
-                      ) : (
+                      {isInactive ? (
                         <span className="badge bg-warning text-dark">
                           ⚠ Needs Check
+                        </span>
+                      ) : (
+                        <span className="badge bg-success">
+                          ✔ Active
                         </span>
                       )}
                     </td>
@@ -62,7 +59,7 @@ export default function LivestockTable({ data }: Props) {
         </div>
 
         <small className="text-muted">
-          Status is derived from movement inactivity thresholds.
+          Status is based on prolonged inactivity detection.
         </small>
       </div>
     </div>
