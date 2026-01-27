@@ -7,6 +7,9 @@ import LivestockChart from "../components/LivestockChart";
 import LiveCard from "../components/LiveCard";
 import { livestockData } from "../data/mockLivestock";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 type Page = "home" | "dashboard" | "about";
 
 export default function Home() {
@@ -14,8 +17,11 @@ export default function Home() {
 
   return (
     <main
-      className="vh-100 d-flex flex-column"
-      style={{ backgroundColor: "#f0fdf4" }}
+      className="d-flex flex-column"
+      style={{
+        minHeight: "100dvh", // ✅ mobile-safe viewport height
+        backgroundColor: "#f0fdf4",
+      }}
     >
       {/* ================= NAVBAR ================= */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-success px-4">
@@ -58,11 +64,18 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ================= CONTENT ================= */}
-      <div className="flex-grow-1 container-fluid p-4 overflow-hidden">
+      {/* ================= SCROLLABLE CONTENT ================= */}
+      <div
+        className="flex-grow-1 container-fluid p-4"
+        style={{
+          overflowY: "auto", // ✅ ENABLE SCROLL
+          WebkitOverflowScrolling: "touch",
+          paddingBottom: "4rem", // ✅ prevent mobile cutoff
+        }}
+      >
         {/* ================= HOME ================= */}
         {page === "home" && (
-          <div className="h-100 d-flex flex-column justify-content-center align-items-center text-center">
+          <div className="d-flex flex-column justify-content-center align-items-center text-center">
             <img
               src="/farmcare-logo.svg"
               alt="FarmCare"
@@ -74,13 +87,13 @@ export default function Home() {
               FarmCare
             </h1>
 
-            <p className="fs-3 text-muted col-lg-7">
+            <p className="fs-4 text-muted col-lg-7">
               A smart livestock monitoring platform designed to visualize
               animal movement, inactivity, and zone-based behavior using
               sensor-assisted tracking technologies.
             </p>
 
-            <p className="fs-4 text-muted col-lg-7">
+            <p className="fs-5 text-muted col-lg-7">
               This system is currently in <strong>prototype stage</strong>.
               Hardware development and live data integration are ongoing.
             </p>
@@ -92,7 +105,7 @@ export default function Home() {
           <>
             <Header />
 
-            <div className="alert alert-info border-0 shadow-sm mb-3 fs-5">
+            <div className="alert alert-info border-0 shadow-sm mb-3 fs-6">
               <strong>Prototype Notice:</strong> This dashboard is not the final
               design. Visual layout, metrics, and live data feeds will evolve
               once livestock tracking hardware is fully deployed.
@@ -100,14 +113,14 @@ export default function Home() {
 
             {/* KPI ROW */}
             <div className="row g-3 mb-3">
-              <div className="col-lg-3 col-md-6">
+              <div className="col-6 col-lg-3">
                 <LiveCard
                   label="Total Livestock"
                   value={livestockData.length}
                 />
               </div>
 
-              <div className="col-lg-3 col-md-6">
+              <div className="col-6 col-lg-3">
                 <LiveCard
                   label="Active Animals"
                   value="Movement Detected"
@@ -115,7 +128,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className="col-lg-3 col-md-6">
+              <div className="col-6 col-lg-3">
                 <LiveCard
                   label="Needs Inspection"
                   value="Auto-Detected"
@@ -123,30 +136,30 @@ export default function Home() {
                 />
               </div>
 
-              <div className="col-lg-3 col-md-6">
+              <div className="col-6 col-lg-3">
                 <LiveCard label="System Time" liveTime />
               </div>
             </div>
 
             {/* MAIN PANELS */}
-            <div className="row g-3" style={{ height: "calc(100% - 220px)" }}>
-              <div className="col-lg-6 h-100">
+            <div className="row g-3">
+              <div className="col-lg-6">
                 <div className="card h-100 shadow-sm border-0">
                   <div className="card-header fw-semibold bg-success-subtle fs-5">
                     Livestock Activity Map
                   </div>
-                  <div className="card-body">
+                  <div className="card-body" style={{ minHeight: 320 }}>
                     <FarmMap />
                   </div>
                 </div>
               </div>
 
-              <div className="col-lg-6 h-100">
+              <div className="col-lg-6">
                 <div className="card h-100 shadow-sm border-0">
                   <div className="card-header fw-semibold bg-success-subtle fs-5">
                     Analytics Overview
                   </div>
-                  <div className="card-body">
+                  <div className="card-body" style={{ minHeight: 320 }}>
                     <LivestockChart data={livestockData} />
                   </div>
                 </div>
@@ -154,7 +167,7 @@ export default function Home() {
             </div>
 
             {/* DOCUMENTATION LINK */}
-            <div className="text-end mt-2">
+            <div className="text-end mt-3">
               <a
                 href="https://docs.google.com/document/d/12o9G-_lwU_-qmZ4wkKsmcx9OBcawGEWyKST4HC7s_zM/edit"
                 target="_blank"
@@ -169,7 +182,7 @@ export default function Home() {
 
         {/* ================= ABOUT ================= */}
         {page === "about" && (
-          <div className="h-100 d-flex flex-column justify-content-center align-items-center text-center">
+          <div className="d-flex flex-column justify-content-center align-items-center text-center">
             <h2 className="fw-bold text-success display-4 mb-3">
               About FarmCare
             </h2>
