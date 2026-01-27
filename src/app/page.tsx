@@ -19,18 +19,14 @@ export default function Home() {
     <main
       className="d-flex flex-column"
       style={{
-        minHeight: "100dvh", // ✅ mobile-safe viewport height
+        minHeight: "100dvh",
         backgroundColor: "#f0fdf4",
       }}
     >
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-success px-4">
         <div className="navbar-brand d-flex align-items-center gap-2">
-          <img
-            src="/farmcare-logo.svg"
-            alt="FarmCare Logo"
-            height={32}
-          />
+          <img src="/farmcare-logo.svg" alt="FarmCare Logo" height={32} />
           <span className="fw-semibold fs-5">FarmCare</span>
         </div>
 
@@ -64,28 +60,21 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ================= SCROLLABLE CONTENT ================= */}
+      {/* CONTENT */}
       <div
         className="flex-grow-1 container-fluid p-4"
         style={{
-          overflowY: "auto", // ✅ ENABLE SCROLL
+          overflowY: "auto",
           WebkitOverflowScrolling: "touch",
-          paddingBottom: "4rem", // ✅ prevent mobile cutoff
+          paddingBottom: "4rem",
         }}
       >
-        {/* ================= HOME ================= */}
+        {/* HOME */}
         {page === "home" && (
           <div className="d-flex flex-column justify-content-center align-items-center text-center">
-            <img
-              src="/farmcare-logo.svg"
-              alt="FarmCare"
-              width={160}
-              className="mb-4"
-            />
+            <img src="/farmcare-logo.svg" alt="FarmCare" width={160} className="mb-4" />
 
-            <h1 className="fw-bold text-success display-3 mb-3">
-              FarmCare
-            </h1>
+            <h1 className="fw-bold text-success display-3 mb-3">FarmCare</h1>
 
             <p className="fs-4 text-muted col-lg-7">
               A smart livestock monitoring platform designed to visualize
@@ -100,40 +89,28 @@ export default function Home() {
           </div>
         )}
 
-        {/* ================= DASHBOARD ================= */}
+        {/* DASHBOARD */}
         {page === "dashboard" && (
           <>
             <Header />
 
             <div className="alert alert-danger border-0 shadow-sm mb-3 fs-6">
-  <strong>Prototype Notice:</strong> This dashboard is not the final
-  design. Visual layout, metrics, and live data feeds will evolve
-  once livestock tracking hardware is fully deployed.
-</div>
+              <strong>Prototype Notice:</strong> This dashboard is not the final
+              design. Visual layout, metrics, and live data feeds will evolve
+              once livestock tracking hardware is fully deployed.
+            </div>
 
-            {/* KPI ROW */}
             <div className="row g-3 mb-3">
               <div className="col-6 col-lg-3">
-                <LiveCard
-                  label="Total Livestock"
-                  value={livestockData.length}
-                />
+                <LiveCard label="Total Livestock" value={livestockData.length} />
               </div>
 
               <div className="col-6 col-lg-3">
-                <LiveCard
-                  label="Active Animals"
-                  value="Movement Detected"
-                  status="ok"
-                />
+                <LiveCard label="Active Animals" value="Movement Detected" status="ok" />
               </div>
 
               <div className="col-6 col-lg-3">
-                <LiveCard
-                  label="Needs Inspection"
-                  value="Auto-Detected"
-                  status="warn"
-                />
+                <LiveCard label="Needs Inspection" value="Auto-Detected" status="warn" />
               </div>
 
               <div className="col-6 col-lg-3">
@@ -141,7 +118,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* MAIN PANELS */}
             <div className="row g-3">
               <div className="col-lg-6">
                 <div className="card h-100 shadow-sm border-0">
@@ -165,26 +141,13 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            {/* DOCUMENTATION LINK */}
-            <div className="text-end mt-3">
-              <a
-                href="https://docs.google.com/document/d/12o9G-_lwU_-qmZ4wkKsmcx9OBcawGEWyKST4HC7s_zM/edit"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fw-semibold text-success fs-6 text-decoration-none"
-              >
-              </a>
-            </div>
           </>
         )}
 
-        {/* ================= ABOUT ================= */}
+        {/* ABOUT */}
         {page === "about" && (
           <div className="d-flex flex-column justify-content-center align-items-center text-center">
-            <h2 className="fw-bold text-success display-4 mb-3">
-              About FarmCare
-            </h2>
+            <h2 className="fw-bold text-success display-4 mb-3">About FarmCare</h2>
 
             <p className="fs-3 text-muted col-lg-8">
               FarmCare is an academic, prototype-level livestock monitoring
