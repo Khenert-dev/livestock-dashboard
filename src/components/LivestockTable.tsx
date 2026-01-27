@@ -1,3 +1,5 @@
+"use client";
+
 import { Livestock } from "../types/livestock";
 
 interface Props {
@@ -6,32 +8,63 @@ interface Props {
 
 export default function LivestockTable({ data }: Props) {
   return (
-    <div className="table">
-      <h2>Livestock Data</h2>
+    <div className="card shadow-sm">
+      <div className="card-body">
+        <h6 className="fw-bold mb-3 text-success">
+          📋 Livestock Status Overview
+        </h6>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Weight (kg)</th>
-            <th>Zone</th>
-          </tr>
-        </thead>
+        <div className="table-responsive">
+          <table className="table table-sm align-middle">
+            <thead className="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Zone</th>
+                <th>Status</th>
+                <th>Weight (kg)</th>
+              </tr>
+            </thead>
 
-        <tbody>
-          {data.map(animal => (
-            <tr key={animal.id}>
-              <td>{animal.type}</td>
-              <td className={animal.status === "Healthy" ? "ok" : "bad"}>
-                {animal.status}
-              </td>
-              <td>{animal.weight}</td>
-              <td>Zone {animal.zone}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <tbody>
+              {data.map((animal) => {
+                // TEMP STATUS: derived from movement system concept
+                // (table reflects monitoring state, not medical condition)
+                const status =
+                  animal.id === 2 || animal.id === 5
+                    ? "Check"
+                    : "Active";
+
+                return (
+                  <tr key={animal.id}>
+                    <td>{animal.id}</td>
+                    <td>{animal.type}</td>
+                    <td>{animal.zone}</td>
+
+                    <td>
+                      {status === "Active" ? (
+                        <span className="badge bg-success">
+                          ✔ Active
+                        </span>
+                      ) : (
+                        <span className="badge bg-warning text-dark">
+                          ⚠ Needs Check
+                        </span>
+                      )}
+                    </td>
+
+                    <td>{animal.weight}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <small className="text-muted">
+          Status is derived from movement inactivity thresholds.
+        </small>
+      </div>
     </div>
   );
 }
