@@ -1,41 +1,9 @@
-// src/data/mockLivestock.ts
-
-import type { Livestock } from "../types/livestock";
+import { Livestock } from "../types/livestock";
 
 export const livestockData: Livestock[] = [
-  {
-    id: 1,
-    type: "Cow",
-    zone: "A",
-    status: "Active",
-    weight: 420,
-  },
-  {
-    id: 2,
-    type: "Cow",
-    zone: "A",
-    status: "Needs Check",
-    weight: 410,
-  },
-  {
-    id: 3,
-    type: "Goat",
-    zone: "B",
-    status: "Active",
-    weight: 55,
-  },
-  {
-    id: 4,
-    type: "Cow",
-    zone: "C",
-    status: "Active",
-    weight: 460,
-  },
-  {
-    id: 5,
-    type: "Goat",
-    zone: "C",
-    status: "Needs Check",
-    weight: 50,
-  },
+  { id: 1, type: "Cow", zone: "A", weight: 420, status: "Active" },
+  { id: 2, type: "Cow", zone: "A", weight: 450, status: "Needs Check" },
+  { id: 3, type: "Goat", zone: "B", weight: 60, status: "Active" },
+  { id: 4, type: "Goat", zone: "B", weight: 58, status: "Active" },
+  { id: 5, type: "Cow", zone: "C", weight: 470, status: "Needs Check" },
 ];
