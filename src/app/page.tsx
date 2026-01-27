@@ -1,49 +1,88 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import FarmMap from "../components/FarmMap";
 import LivestockChart from "../components/LivestockChart";
 import LiveCard from "../components/LiveCard";
 import { livestockData } from "../data/mockLivestock";
 
+type Page = "home" | "dashboard" | "about";
+
 export default function Home() {
-  // ✅ DASHBOARD IS NOW THE LANDING PAGE
-  const [page, setPage] = useState<"home" | "dashboard" | "about">("dashboard");
+  const [page, setPage] = useState<Page>("dashboard");
 
   return (
     <main
-      className="min-vh-100 d-flex flex-column"
-      style={{ background: "#f0fdf4" }}
+      className="vh-100 d-flex flex-column"
+      style={{ backgroundColor: "#f0fdf4" }}
     >
-      <Navbar activePage={page} onNavigate={setPage} />
+      {/* ================= NAVBAR ================= */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-success px-4">
+        <div className="navbar-brand d-flex align-items-center gap-2">
+          <img
+            src="/farmcare-logo.svg"
+            alt="FarmCare Logo"
+            height={32}
+          />
+          <span className="fw-semibold fs-5">FarmCare</span>
+        </div>
 
+        <div className="ms-auto d-flex gap-4">
+          <button
+            className={`btn btn-link text-white fs-5 ${
+              page === "home" ? "fw-bold text-decoration-underline" : ""
+            }`}
+            onClick={() => setPage("home")}
+          >
+            Home
+          </button>
+
+          <button
+            className={`btn btn-link text-white fs-5 ${
+              page === "dashboard" ? "fw-bold text-decoration-underline" : ""
+            }`}
+            onClick={() => setPage("dashboard")}
+          >
+            Dashboard
+          </button>
+
+          <button
+            className={`btn btn-link text-white fs-5 ${
+              page === "about" ? "fw-bold text-decoration-underline" : ""
+            }`}
+            onClick={() => setPage("about")}
+          >
+            About
+          </button>
+        </div>
+      </nav>
+
+      {/* ================= CONTENT ================= */}
       <div className="flex-grow-1 container-fluid p-4 overflow-hidden">
         {/* ================= HOME ================= */}
         {page === "home" && (
-          <div className="h-100 d-flex flex-column justify-content-center align-items-center text-center px-3">
+          <div className="h-100 d-flex flex-column justify-content-center align-items-center text-center">
             <img
               src="/farmcare-logo.svg"
               alt="FarmCare"
-              width={140}
+              width={160}
               className="mb-4"
             />
 
-            <h1 className="fw-bold text-success display-4 mb-3">
+            <h1 className="fw-bold text-success display-3 mb-3">
               FarmCare
             </h1>
 
-            <p className="fs-4 text-muted col-lg-7">
-              FarmCare is a smart livestock monitoring platform designed to
-              visualize animal movement, inactivity, and zone distribution
-              using sensor-assisted tracking technologies.
+            <p className="fs-3 text-muted col-lg-7">
+              A smart livestock monitoring platform designed to visualize
+              animal movement, inactivity, and zone-based behavior using
+              sensor-assisted tracking technologies.
             </p>
 
-            <p className="fs-5 text-muted col-lg-7">
+            <p className="fs-4 text-muted col-lg-7">
               This system is currently in <strong>prototype stage</strong>.
-              Hardware development and real-time data integration are still
-              ongoing.
+              Hardware development and live data integration are ongoing.
             </p>
           </div>
         )}
@@ -53,7 +92,7 @@ export default function Home() {
           <>
             <Header />
 
-            <div className="alert alert-info border-0 shadow-sm mb-3 fs-6">
+            <div className="alert alert-info border-0 shadow-sm mb-3 fs-5">
               <strong>Prototype Notice:</strong> This dashboard is not the final
               design. Visual layout, metrics, and live data feeds will evolve
               once livestock tracking hardware is fully deployed.
@@ -61,14 +100,14 @@ export default function Home() {
 
             {/* KPI ROW */}
             <div className="row g-3 mb-3">
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-lg-3 col-md-6">
                 <LiveCard
                   label="Total Livestock"
                   value={livestockData.length}
                 />
               </div>
 
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-lg-3 col-md-6">
                 <LiveCard
                   label="Active Animals"
                   value="Movement Detected"
@@ -76,7 +115,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-lg-3 col-md-6">
                 <LiveCard
                   label="Needs Inspection"
                   value="Auto-Detected"
@@ -84,16 +123,16 @@ export default function Home() {
                 />
               </div>
 
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-lg-3 col-md-6">
                 <LiveCard label="System Time" liveTime />
               </div>
             </div>
 
-            {/* MAIN CONTENT */}
-            <div className="row g-3 h-100">
-              <div className="col-12 col-lg-6">
+            {/* MAIN PANELS */}
+            <div className="row g-3" style={{ height: "calc(100% - 220px)" }}>
+              <div className="col-lg-6 h-100">
                 <div className="card h-100 shadow-sm border-0">
-                  <div className="card-header fw-semibold bg-success-subtle">
+                  <div className="card-header fw-semibold bg-success-subtle fs-5">
                     Livestock Activity Map
                   </div>
                   <div className="card-body">
@@ -102,9 +141,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="col-12 col-lg-6">
+              <div className="col-lg-6 h-100">
                 <div className="card h-100 shadow-sm border-0">
-                  <div className="card-header fw-semibold bg-success-subtle">
+                  <div className="card-header fw-semibold bg-success-subtle fs-5">
                     Analytics Overview
                   </div>
                   <div className="card-body">
@@ -113,27 +152,48 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* DOCUMENTATION LINK */}
+            <div className="text-end mt-2">
+              <a
+                href="https://docs.google.com/document/d/12o9G-_lwU_-qmZ4wkKsmcx9OBcawGEWyKST4HC7s_zM/edit"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fw-semibold text-success fs-6 text-decoration-none"
+              >
+                📄 View Project Documentation
+              </a>
+            </div>
           </>
         )}
 
         {/* ================= ABOUT ================= */}
         {page === "about" && (
-          <div className="h-100 d-flex flex-column justify-content-center align-items-center text-center px-3">
-            <h2 className="fw-bold text-success display-5 mb-3">
+          <div className="h-100 d-flex flex-column justify-content-center align-items-center text-center">
+            <h2 className="fw-bold text-success display-4 mb-3">
               About FarmCare
             </h2>
 
-            <p className="fs-4 text-muted col-lg-8">
-              FarmCare is an academic and prototype-level livestock monitoring
-              system focused on movement-based behavior analysis and zone-aware
-              visualization.
+            <p className="fs-3 text-muted col-lg-8">
+              FarmCare is an academic, prototype-level livestock monitoring
+              system focused on movement-based behavior analysis and
+              zone-aware visualization.
             </p>
 
-            <p className="fs-5 text-muted col-lg-8">
-              The platform emphasizes ethical system design and does not collect
-              biometric, medical, or personally identifiable data. All current
-              data shown is simulated for development and testing purposes.
+            <p className="fs-4 text-muted col-lg-8">
+              The platform emphasizes ethical system design and does not
+              collect biometric, medical, or personally identifiable data.
+              All displayed data is simulated for development purposes.
             </p>
+
+            <a
+              href="https://docs.google.com/document/d/12o9G-_lwU_-qmZ4wkKsmcx9OBcawGEWyKST4HC7s_zM/edit"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline-success btn-lg mt-3"
+            >
+              Read Full Project Documentation
+            </a>
           </div>
         )}
       </div>
