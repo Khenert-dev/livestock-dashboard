@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import FarmMap from "../components/FarmMap";
 import LivestockChart from "../components/LivestockChart";
@@ -8,12 +8,16 @@ import LiveCard from "../components/LiveCard";
 import { livestockData } from "../data/mockLivestock";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 type Page = "home" | "dashboard" | "about";
 
 export default function Home() {
   const [page, setPage] = useState<Page>("dashboard");
+
+  // ✅ FIX: load Bootstrap JS ONLY on client (prevents document undefined)
+  useEffect(() => {
+    import("bootstrap/dist/js/bootstrap.bundle.min.js");
+  }, []);
 
   return (
     <main
