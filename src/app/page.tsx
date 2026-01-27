@@ -105,11 +105,11 @@ export default function Home() {
           <>
             <Header />
 
-            <div className="alert alert-info border-0 shadow-sm mb-3 fs-6">
-              <strong>Prototype Notice:</strong> This dashboard is not the final
-              design. Visual layout, metrics, and live data feeds will evolve
-              once livestock tracking hardware is fully deployed.
-            </div>
+            <div className="alert alert-danger border-0 shadow-sm mb-3 fs-6">
+  <strong>Prototype Notice:</strong> This dashboard is not the final
+  design. Visual layout, metrics, and live data feeds will evolve
+  once livestock tracking hardware is fully deployed.
+</div>
 
             {/* KPI ROW */}
             <div className="row g-3 mb-3">
@@ -174,7 +174,6 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="fw-semibold text-success fs-6 text-decoration-none"
               >
-                📄 View Project Documentation
               </a>
             </div>
           </>
