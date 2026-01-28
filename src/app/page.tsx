@@ -41,26 +41,18 @@ export default function Page() {
   const inactive = animals.length - active;
 
   return (
-    <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ height: "calc(100vh - 56px)", display: "flex", flexDirection: "column" }}>
       {/* HEADER */}
       <Box sx={{ px: 2, pt: 1 }}>
         <Header lastUpdated={uiNow} alertCount={alerts.length} />
         <DeviceConnect />
       </Box>
 
-      {/* BODY */}
-      <Box sx={{ flex: 1, overflow: "hidden" }}>
-        <Container
-          maxWidth="xl"
-          sx={{
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            py: 2,
-            gap: 2,
-          }}
-        >
-          {/* KPI ROW */}
+      {/* MAIN SCROLL AREA (ONLY ONE) */}
+      <Box sx={{ flex: 1, overflowY: "auto" }}>
+        <Container maxWidth="xl" sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+          
+          {/* KPI */}
           <Box
             sx={{
               display: "grid",
@@ -74,111 +66,82 @@ export default function Page() {
           >
             <LiveCard label="Total Livestock" value={animals.length} />
             <LiveCard label="Active" value={active} status="ok" />
-            <LiveCard
-              label="Needs Inspection"
-              value={inactive}
-              status="warn"
-            />
+            <LiveCard label="Needs Inspection" value={inactive} status="warn" />
             <LiveCard label="System Time" liveTime />
           </Box>
 
           {/* CONTROLS */}
           <Stack direction="row" spacing={1}>
             <Button
-              size="small"
               variant={viewMode === "live" ? "contained" : "outlined"}
+              size="small"
               onClick={() => setViewMode("live")}
             >
               Live
             </Button>
             <Button
-              size="small"
               variant={viewMode === "history" ? "contained" : "outlined"}
+              size="small"
               onClick={() => setViewMode("history")}
             >
               History
             </Button>
             <Box sx={{ flexGrow: 1 }} />
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={() => addAnimal("Cow", "A")}
-            >
+            <Button size="small" variant="outlined" onClick={() => addAnimal("Cow", "A")}>
               + Add Animal
             </Button>
           </Stack>
 
-          {/* SCROLLABLE CONTENT */}
-          <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
-            {/* MONITORING AREA */}
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: {
-                  xs: "1fr",
-                  lg: "2fr 1fr",
-                },
-                gap: 2,
-                mb: 2,
-              }}
-            >
-              {/* MAP */}
-              <Paper
-                sx={{
-                  p: 2,
-                  height: 360,
-                  position: "relative",
-                  overflow: "hidden",
-                  zIndex: 1,
-                }}
-              >
-                <FarmMap
-                  animals={animals}
-                  mode={viewMode}
-                  getStatus={getStatus}
-                  onRemove={removeAnimal}
-                />
-              </Paper>
-
-              {/* CHART + ALERTS */}
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Paper sx={{ p: 2, height: 200 }}>
-                  <LivestockChart data={animals} />
-                </Paper>
-
-                <Paper sx={{ p: 2, minHeight: 120 }}>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Alerts
-                  </Typography>
-
-                  {alerts.length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">
-                      All systems normal
-                    </Typography>
-                  ) : (
-                    alerts.map((a) => (
-                      <Typography
-                        key={a.id}
-                        variant="body2"
-                        color="warning.main"
-                      >
-                        ⚠ {a.type} #{a.id} inactive
-                      </Typography>
-                    ))
-                  )}
-                </Paper>
-              </Box>
-            </Box>
-
-            {/* DATA TABLE (ONLY ONCE) */}
-            <Paper sx={{ p: 2 }}>
-              <LivestockTable
+          {/* MONITORING */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", lg: "2fr 1fr" },
+              gap: 2,
+            }}
+          >
+            <Paper sx={{ p: 2, height: 360, overflow: "hidden" }}>
+              <FarmMap
                 animals={animals}
+                mode={viewMode}
                 getStatus={getStatus}
                 onRemove={removeAnimal}
               />
             </Paper>
+
+            <Stack spacing={2}>
+              <Paper sx={{ p: 2, height: 200 }}>
+                <LivestockChart data={animals} />
+              </Paper>
+
+              <Paper sx={{ p: 2 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Alerts
+                </Typography>
+                {alerts.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary">
+                    All systems normal
+                  </Typography>
+                ) : (
+                  alerts.map((a) => (
+                    <Typography key={a.id} variant="body2" color="warning.main">
+                      ⚠ {a.type} #{a.id} inactive
+                    </Typography>
+                  ))
+                )}
+              </Paper>
+            </Stack>
           </Box>
+
+          {/* TABLE (NO INTERNAL SCROLL) */}
+          <Paper sx={{ p: 2 }}>
+            <LivestockTable
+              animals={animals}
+              getStatus={getStatus}
+              onRemove={removeAnimal}
+            />
+          </Paper>
+
         </Container>
       </Box>
     </Box>

@@ -35,16 +35,14 @@ export default function LivestockTable({
 
   return (
     <>
-      <TableContainer
-        sx={{
-          maxHeight: 320,
-          borderRadius: 2,
-          border: "1px solid rgba(15,23,42,0.06)",
-          position: "relative",
-          zIndex: 2,
-          backgroundColor: "#fff",
-        }}
-      >
+     <TableContainer
+  sx={{
+    borderRadius: 2,
+    border: "1px solid rgba(15,23,42,0.08)",
+    backgroundColor: "transparent",
+  }}
+>
+
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>

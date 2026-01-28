@@ -1,7 +1,8 @@
 "use client";
 
-import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
+import { AppBar, Toolbar, Box, Typography, Button } from "@mui/material";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -12,21 +13,40 @@ export default function Navbar() {
       position="static"
       elevation={0}
       sx={{
-        backgroundColor: "#16a34a",
+        background: "linear-gradient(90deg, #2e7d32, #388e3c)",
         borderBottom: "1px solid rgba(15,23,42,0.15)",
       }}
     >
       <Toolbar sx={{ minHeight: 56, px: 2 }}>
-        {/* BRAND */}
-        <Typography
-          variant="h6"
+        {/* LOGO + BRAND */}
+        <Box
+          component={Link}
+          href="/"
           sx={{
-            fontWeight: 700,
-            letterSpacing: "-0.02em",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            textDecoration: "none",
+            color: "inherit",
           }}
         >
-          FarmCare
-        </Typography>
+          <Image
+            src="/farmcare-logo.svg"
+            alt="FarmCare Logo"
+            width={28}
+            height={28}
+            priority
+          />
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            FarmCare
+          </Typography>
+        </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 

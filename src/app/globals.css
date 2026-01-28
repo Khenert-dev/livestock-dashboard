@@ -1,6 +1,4 @@
-/* =========================
-   GLOBAL RESET (MUI FRIENDLY)
-   ========================= */
+/* RESET */
 *,
 *::before,
 *::after {
@@ -11,46 +9,22 @@ html,
 body {
   height: 100%;
   margin: 0;
-  padding: 0;
-
-  /* IMPORTANT: window locked, internal scroll only */
-  overflow: hidden;
-
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
-
-  /* Soft premium white (NOT pure white) */
-  background-color: #f6f7fb;
+  overflow: hidden; /* IMPORTANT: window never scrolls */
+  background: linear-gradient(
+    180deg,
+    #f1f7f4 0%,
+    #eef6f1 100%
+  );
   color: #0f172a;
 }
 
-/* =========================
-   TYPOGRAPHY TUNING
-   ========================= */
-h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.015em;
-  font-weight: 600;
-  margin: 0;
-}
-
-p {
-  margin: 0;
-  color: #374151;
-}
-
-small {
-  color: #6b7280;
-}
-
-/* =========================
-   SCROLLBAR (SUBTLE)
-   ========================= */
+/* ONE SCROLLBAR ONLY (inside main content) */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.18);
+  background: rgba(15, 23, 42, 0.2);
   border-radius: 8px;
 }
 
@@ -58,92 +32,11 @@ small {
   background: transparent;
 }
 
-/* =========================
-   CARD / PAPER HARMONY
-   (matches MUI elevation)
-   ========================= */
-.MuiPaper-root {
-  border-radius: 14px;
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  background-color: #ffffff;
-}
-
-/* Hover polish (very subtle) */
-.MuiPaper-root:hover {
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
-  transition: box-shadow 0.25s ease;
-}
-
-/* =========================
-   KPI CARD POLISH
-   ========================= */
-.kpi-card {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.kpi-card .value {
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-.kpi-ok {
-  border-left: 4px solid #16a34a;
-}
-
-.kpi-warn {
-  border-left: 4px solid #f59e0b;
-}
-
-/* =========================
-   BUTTON REFINEMENTS
-   ========================= */
-button {
-  text-transform: none !important;
-  font-weight: 500;
-}
-
-/* =========================
-   TABLE POLISH
-   ========================= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #6b7280;
-}
-
-td {
-  font-size: 0.9rem;
-  color: #111827;
-}
-
-/* =========================
-   MAP OVERLAY SAFETY
-   ========================= */
-svg {
-  user-select: none;
-}
-
-/* =========================
-   ALERT TEXT
-   ========================= */
-.alert-text {
-  font-size: 0.85rem;
-  color: #b45309;
-}
-
-/* =========================
-   REMOVE OLD BOOTSTRAP CONFLICTS
-   ========================= */
+/* REMOVE BOOTSTRAP GHOSTS */
 .card,
 .alert,
-.navbar {
+.navbar,
+.table,
+.badge {
   all: unset;
 }
