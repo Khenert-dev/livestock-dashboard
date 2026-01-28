@@ -1,6 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  Box,
+  Paper,
+  Button,
+  Stack,
+  Typography,
+  Container,
+} from "@mui/material";
+
 import { useLivestockStore } from "../lib/useLivestockStore";
 import FarmMap from "../components/FarmMap";
 import LiveCard from "../components/LiveCard";
@@ -23,13 +32,8 @@ export default function Page() {
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<"live" | "history">("live");
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    setMode(viewMode);
-  }, [viewMode, setMode]);
+  useEffect(() => setMounted(true), []);
+  useEffect(() => setMode(viewMode), [viewMode, setMode]);
 
   if (!mounted) return null;
 
@@ -37,99 +41,146 @@ export default function Page() {
   const inactive = animals.length - active;
 
   return (
-    <main className="container-fluid p-3 bg-light min-vh-100">
+    <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
       {/* HEADER */}
-      <Header lastUpdated={uiNow} alertCount={alerts.length} />
-
-      {/* DEVICE STATUS */}
-      <div className="mb-2">
+      <Box sx={{ px: 2, pt: 1 }}>
+        <Header lastUpdated={uiNow} alertCount={alerts.length} />
         <DeviceConnect />
-      </div>
+      </Box>
 
-      {/* KPI CARDS */}
-      <div className="row g-2 mb-3">
-        <div className="col">
-          <LiveCard label="Total Livestock" value={animals.length} />
-        </div>
-        <div className="col">
-          <LiveCard label="Active" value={active} status="ok" />
-        </div>
-        <div className="col">
-          <LiveCard label="Needs Inspection" value={inactive} status="warn" />
-        </div>
-        <div className="col">
-          <LiveCard label="System Time" liveTime />
-        </div>
-      </div>
-
-      {/* CONTROLS */}
-      <div className="d-flex gap-2 mb-2">
-        <button
-          className={`btn btn-sm ${
-            viewMode === "live" ? "btn-success" : "btn-outline-success"
-          }`}
-          onClick={() => setViewMode("live")}
+      {/* BODY */}
+      <Box sx={{ flex: 1, overflow: "hidden" }}>
+        <Container
+          maxWidth="xl"
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            py: 2,
+            gap: 2,
+          }}
         >
-          Live
-        </button>
-
-        <button
-          className={`btn btn-sm ${
-            viewMode === "history"
-              ? "btn-success"
-              : "btn-outline-success"
-          }`}
-          onClick={() => setViewMode("history")}
-        >
-          History
-        </button>
-
-        <button
-          className="btn btn-sm btn-outline-primary ms-auto"
-          onClick={() => addAnimal("Cow", "A")}
-        >
-          + Add Animal
-        </button>
-      </div>
-
-      {/* MAIN GRID */}
-      <div className="row g-3">
-        <div className="col-lg-7">
-          <div className="card p-2">
-            <FarmMap
-              animals={animals}
-              mode={viewMode}
-              getStatus={getStatus}
-              onRemove={removeAnimal}
+          {/* KPI ROW */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "1fr 1fr",
+                md: "repeat(4, 1fr)",
+              },
+              gap: 2,
+            }}
+          >
+            <LiveCard label="Total Livestock" value={animals.length} />
+            <LiveCard label="Active" value={active} status="ok" />
+            <LiveCard
+              label="Needs Inspection"
+              value={inactive}
+              status="warn"
             />
-          </div>
-        </div>
+            <LiveCard label="System Time" liveTime />
+          </Box>
 
-        <div className="col-lg-5">
-          <div className="card p-2 mb-3">
-            <LivestockChart data={animals} />
-          </div>
+          {/* CONTROLS */}
+          <Stack direction="row" spacing={1}>
+            <Button
+              size="small"
+              variant={viewMode === "live" ? "contained" : "outlined"}
+              onClick={() => setViewMode("live")}
+            >
+              Live
+            </Button>
+            <Button
+              size="small"
+              variant={viewMode === "history" ? "contained" : "outlined"}
+              onClick={() => setViewMode("history")}
+            >
+              History
+            </Button>
+            <Box sx={{ flexGrow: 1 }} />
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => addAnimal("Cow", "A")}
+            >
+              + Add Animal
+            </Button>
+          </Stack>
 
-          {/* ALERTS (LOCKED HEIGHT — NO JUMP) */}
-          <div className="card p-2" style={{ minHeight: 120 }}>
-            <strong className="mb-1 d-block">Alerts</strong>
-            {alerts.length === 0 ? (
-              <small className="text-muted">All systems normal</small>
-            ) : (
-              alerts.map((a) => (
-                <div key={a.id} className="text-warning small">
-                  ⚠ {a.type} #{a.id} inactive
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
+          {/* SCROLLABLE CONTENT */}
+          <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
+            {/* MONITORING AREA */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  lg: "2fr 1fr",
+                },
+                gap: 2,
+                mb: 2,
+              }}
+            >
+              {/* MAP */}
+              <Paper
+                sx={{
+                  p: 2,
+                  height: 360,
+                  position: "relative",
+                  overflow: "hidden",
+                  zIndex: 1,
+                }}
+              >
+                <FarmMap
+                  animals={animals}
+                  mode={viewMode}
+                  getStatus={getStatus}
+                  onRemove={removeAnimal}
+                />
+              </Paper>
 
-      {/* TABLE */}
-      <div className="card mt-3 p-2">
-        <LivestockTable animals={animals} getStatus={getStatus} />
-      </div>
-    </main>
+              {/* CHART + ALERTS */}
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Paper sx={{ p: 2, height: 200 }}>
+                  <LivestockChart data={animals} />
+                </Paper>
+
+                <Paper sx={{ p: 2, minHeight: 120 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Alerts
+                  </Typography>
+
+                  {alerts.length === 0 ? (
+                    <Typography variant="body2" color="text.secondary">
+                      All systems normal
+                    </Typography>
+                  ) : (
+                    alerts.map((a) => (
+                      <Typography
+                        key={a.id}
+                        variant="body2"
+                        color="warning.main"
+                      >
+                        ⚠ {a.type} #{a.id} inactive
+                      </Typography>
+                    ))
+                  )}
+                </Paper>
+              </Box>
+            </Box>
+
+            {/* DATA TABLE (ONLY ONCE) */}
+            <Paper sx={{ p: 2 }}>
+              <LivestockTable
+                animals={animals}
+                getStatus={getStatus}
+                onRemove={removeAnimal}
+              />
+            </Paper>
+          </Box>
+        </Container>
+      </Box>
+    </Box>
   );
 }

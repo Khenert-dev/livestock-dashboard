@@ -1,5 +1,7 @@
 "use client";
 
+import { Box, Typography, Chip } from "@mui/material";
+
 interface Props {
   lastUpdated: number;
   alertCount: number;
@@ -7,29 +9,60 @@ interface Props {
 
 export default function Header({ lastUpdated, alertCount }: Props) {
   return (
-    <div className="d-flex justify-content-between align-items-center mb-2 px-1">
-      <div className="d-flex align-items-center gap-2">
-        <span className="fw-semibold text-success">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        mb: 1,
+        px: 1,
+      }}
+    >
+      {/* LEFT: TITLE */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 600 }}
+        >
           Livestock Monitoring
-        </span>
-        <span className="badge bg-secondary bg-opacity-25 text-dark">
-          Prototype
-        </span>
-      </div>
+        </Typography>
 
-      <div className="d-flex align-items-center gap-3 small text-muted">
-        <span>
+        <Chip
+          label="Prototype"
+          size="small"
+          sx={{
+            backgroundColor: "rgba(15,23,42,0.06)",
+            color: "#374151",
+            fontWeight: 500,
+          }}
+        />
+      </Box>
+
+      {/* RIGHT: STATUS */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+        >
           Updated {new Date(lastUpdated).toLocaleTimeString()}
-        </span>
+        </Typography>
 
         {alertCount > 0 ? (
-          <span className="text-warning fw-semibold">
-            ⚠ {alertCount} Alerts
-          </span>
+          <Chip
+            label={`⚠ ${alertCount} Alerts`}
+            size="small"
+            color="warning"
+            variant="outlined"
+          />
         ) : (
-          <span className="text-success">● All normal</span>
+          <Chip
+            label="● All normal"
+            size="small"
+            color="success"
+            variant="outlined"
+          />
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

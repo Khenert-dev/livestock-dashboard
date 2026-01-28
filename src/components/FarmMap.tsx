@@ -13,17 +13,8 @@ interface Props {
   onRemove: (id: number) => void;
 }
 
-/* Map size (matches card height nicely) */
 const WIDTH = 600;
 const HEIGHT = 320;
-
-/* Fake geo bounds (for believable movement) */
-const BOUNDS = {
-  xMin: 20,
-  xMax: WIDTH - 20,
-  yMin: 20,
-  yMax: HEIGHT - 20,
-};
 
 export default function FarmMap({
   animals,
@@ -46,7 +37,6 @@ export default function FarmMap({
           backgroundPosition: "center",
         }}
       >
-        {/* HISTORY PATHS */}
         {mode === "history" &&
           animals.map((a) => (
             <polyline
@@ -61,65 +51,34 @@ export default function FarmMap({
             />
           ))}
 
-        {/* ANIMALS */}
-        {animals.map((a) => {
-          const status = getStatus(a);
-          const color =
-            status === "Active" ? "#16a34a" : "#f59e0b";
-
-          return (
-            <circle
-              key={a.id}
-              cx={Math.min(
-                Math.max(a.x, BOUNDS.xMin),
-                BOUNDS.xMax
-              )}
-              cy={Math.min(
-                Math.max(a.y, BOUNDS.yMin),
-                BOUNDS.yMax
-              )}
-              r={6}
-              fill={color}
-              stroke="#14532d"
-              strokeWidth={2}
-              style={{ cursor: "pointer" }}
-              onClick={() => setSelected(a.id)}
-            />
-          );
-        })}
+        {animals.map((a) => (
+          <circle
+            key={a.id}
+            cx={a.x}
+            cy={a.y}
+            r={6}
+            fill={getStatus(a) === "Active" ? "#16a34a" : "#f59e0b"}
+            stroke="#14532d"
+            strokeWidth={2}
+            style={{ cursor: "pointer" }}
+            onClick={() => setSelected(a.id)}
+          />
+        ))}
       </svg>
 
-      {/* INFO PANEL */}
       {selected &&
         animals
           .filter((a) => a.id === selected)
           .map((a) => (
             <div
               key={a.id}
-              className="card position-absolute shadow-sm"
-              style={{
-                right: 12,
-                bottom: 12,
-                width: 220,
-              }}
+              className="card position-absolute"
+              style={{ right: 12, bottom: 12, width: 220 }}
             >
               <div className="card-body p-2">
-                <strong>
-                  {a.type} #{a.id}
-                </strong>
-                <div className="small">
-                  Status: {getStatus(a)}
-                </div>
-                <div className="small">
-                  Zone: {a.zone}
-                </div>
-
-                {a.history.length > 1 && (
-                  <div className="small text-muted mt-1">
-                    Path points: {a.history.length}
-                  </div>
-                )}
-
+                <strong>{a.type} #{a.id}</strong>
+                <div className="small">Status: {getStatus(a)}</div>
+                <div className="small">Path points: {a.history.length}</div>
                 <button
                   className="btn btn-sm btn-danger w-100 mt-2"
                   onClick={() => {
@@ -127,7 +86,7 @@ export default function FarmMap({
                     setSelected(null);
                   }}
                 >
-                  Remove Animal
+                  Remove
                 </button>
               </div>
             </div>

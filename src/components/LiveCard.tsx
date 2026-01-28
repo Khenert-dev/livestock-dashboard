@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Paper, Typography, Box } from "@mui/material";
 
 interface Props {
   label: string;
@@ -19,38 +20,73 @@ export default function LiveCard({
 
   useEffect(() => {
     if (!liveTime) return;
-    const tick = () => setTime(new Date().toLocaleTimeString());
-    tick();
-    const i = setInterval(tick, 1000);
-    return () => clearInterval(i);
+
+    const update = () => setTime(new Date().toLocaleTimeString());
+    update();
+
+    const t = setInterval(update, 1000);
+    return () => clearInterval(t);
   }, [liveTime]);
 
-  const color =
-    status === "ok"
-      ? "text-success"
-      : status === "warn"
-      ? "text-warning"
-      : "text-dark";
-
-  const indicator =
-    status === "ok" ? "●" : status === "warn" ? "▲" : "■";
-
   return (
-    <div className="card h-100 shadow-sm border-0">
-      <div className="card-body py-2 px-3">
-        <div className="d-flex justify-content-between align-items-center">
-          <small className="text-muted">{label}</small>
-          {status && (
-            <span className={`small fw-bold ${color}`}>
-              {indicator}
-            </span>
-          )}
-        </div>
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
 
-        <div className={`fs-4 fw-semibold mt-1 ${color}`} aria-live="polite">
+        /* border + premium feel */
+        border: "1px solid rgba(15,23,42,0.08)",
+        transition: "all 0.25s ease",
+
+        "&:hover": {
+          boxShadow: "0 10px 24px rgba(15,23,42,0.1)",
+          transform: "translateY(-2px)",
+        },
+
+        /* status accent */
+        borderLeft:
+          status === "ok"
+            ? "4px solid #16a34a"
+            : status === "warn"
+            ? "4px solid #f59e0b"
+            : "4px solid transparent",
+      }}
+    >
+      <Box>
+        <Typography
+          variant="caption"
+          sx={{ color: "text.secondary", fontWeight: 500 }}
+        >
+          {label}
+        </Typography>
+
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 700, mt: 0.5 }}
+        >
           {liveTime ? time : value}
-        </div>
-      </div>
-    </div>
+        </Typography>
+      </Box>
+
+      {status && (
+        <Typography
+          variant="caption"
+          sx={{
+            mt: 1,
+            fontWeight: 500,
+            color:
+              status === "ok"
+                ? "success.main"
+                : "warning.main",
+          }}
+        >
+          {status === "ok" ? "● Active" : "● Needs Check"}
+        </Typography>
+      )}
+    </Paper>
   );
 }

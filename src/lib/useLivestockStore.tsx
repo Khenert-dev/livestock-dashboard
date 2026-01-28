@@ -17,16 +17,18 @@ export interface TrackedLivestock extends Livestock {
   x: number;
   y: number;
   lastMovedAt: number;
+  lastSeenAt: number;
   history: HistoryPoint[];
 }
 
-const CHECK_THRESHOLD = 15000;
-const HISTORY_LIMIT = 60;
+const WARN_THRESHOLD = 20000;
+const HISTORY_LIMIT = 120;
+const STORAGE_KEY = "farmcare-livestock";
 
 const ZONES: Record<ZoneId, { x: number; y: number; w: number; h: number }> = {
-  A: { x: 20, y: 20, w: 200, h: 120 },
-  B: { x: 240, y: 20, w: 200, h: 120 },
-  C: { x: 20, y: 160, w: 420, h: 120 },
+  A: { x: 40, y: 40, w: 180, h: 110 },
+  B: { x: 260, y: 40, w: 180, h: 110 },
+  C: { x: 40, y: 170, w: 400, h: 110 },
 };
 
 export function useLivestockStore() {
@@ -34,66 +36,83 @@ export function useLivestockStore() {
   const [uiNow, setUiNow] = useState(Date.now());
   const mode = useRef<"live" | "history">("live");
 
-  /* INIT */
+  /* LOAD FROM STORAGE OR INIT */
   useEffect(() => {
-    setAnimals(
-      livestockData.map((a) => {
-        const zone = (a.zone ?? "A") as ZoneId;
-        const z = ZONES[zone];
-        const x = z.x + 30 + Math.random() * (z.w - 60);
-        const y = z.y + 30 + Math.random() * (z.h - 60);
+    const cached = localStorage.getItem(STORAGE_KEY);
+    if (cached) {
+      setAnimals(JSON.parse(cached));
+      return;
+    }
 
-        return {
-          ...a,
-          zone,
-          x,
-          y,
-          lastMovedAt: Date.now(),
-          history: [{ x, y, time: Date.now() }],
-        };
-      })
-    );
+    const initial = livestockData.map((a) => {
+      const zone = (a.zone ?? "A") as ZoneId;
+      const z = ZONES[zone];
+      const x = z.x + Math.random() * z.w;
+      const y = z.y + Math.random() * z.h;
+      const now = Date.now();
+
+      return {
+        ...a,
+        zone,
+        x,
+        y,
+        lastMovedAt: now,
+        lastSeenAt: now,
+        history: [{ x, y, time: now }],
+      };
+    });
+
+    setAnimals(initial);
   }, []);
 
-  /* UI CLOCK (slow, stable) */
+  /* PERSIST */
   useEffect(() => {
-    const i = setInterval(() => setUiNow(Date.now()), 3000);
-    return () => clearInterval(i);
+    if (animals.length) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(animals));
+    }
+  }, [animals]);
+
+  /* UI CLOCK */
+  useEffect(() => {
+    const t = setInterval(() => setUiNow(Date.now()), 3000);
+    return () => clearInterval(t);
   }, []);
 
-  /* SIMULATION CLOCK (fast, isolated) */
+  /* SIMULATION */
   useEffect(() => {
-    const i = setInterval(() => {
+    const t = setInterval(() => {
       if (mode.current === "history") return;
 
       setAnimals((prev) =>
         prev.map((a) => {
-          if (Math.random() < 0.5) return a;
-
+          const moved = Math.random() > 0.6;
           const z = ZONES[a.zone as ZoneId];
-          const x = Math.min(
-            Math.max(a.x + (Math.random() * 4 - 2), z.x + 12),
-            z.x + z.w - 12
-          );
-          const y = Math.min(
-            Math.max(a.y + (Math.random() * 4 - 2), z.y + 12),
-            z.y + z.h - 12
-          );
+
+          const x = moved
+            ? Math.min(Math.max(a.x + (Math.random() * 6 - 3), z.x), z.x + z.w)
+            : a.x;
+
+          const y = moved
+            ? Math.min(Math.max(a.y + (Math.random() * 6 - 3), z.y), z.y + z.h)
+            : a.y;
+
+          const now = Date.now();
 
           return {
             ...a,
             x,
             y,
-            lastMovedAt: Date.now(),
-            history: [...a.history, { x, y, time: Date.now() }].slice(
-              -HISTORY_LIMIT
-            ),
+            lastMovedAt: moved ? now : a.lastMovedAt,
+            lastSeenAt: now,
+            history: moved
+              ? [...a.history, { x, y, time: now }].slice(-HISTORY_LIMIT)
+              : a.history,
           };
         })
       );
     }, 1000);
 
-    return () => clearInterval(i);
+    return () => clearInterval(t);
   }, []);
 
   function setMode(m: "live" | "history") {
@@ -101,28 +120,30 @@ export function useLivestockStore() {
   }
 
   function getStatus(a: TrackedLivestock): Status {
-    return uiNow - a.lastMovedAt > CHECK_THRESHOLD
+    return uiNow - a.lastSeenAt > WARN_THRESHOLD
       ? "Needs Inspection"
       : "Active";
   }
 
   function addAnimal(type: Livestock["type"], zone: ZoneId) {
     const z = ZONES[zone];
-    const x = z.x + 40;
-    const y = z.y + 40;
+    const x = z.x + 20;
+    const y = z.y + 20;
+    const now = Date.now();
 
     setAnimals((a) => [
       ...a,
       {
-        id: Date.now(),
+        id: now,
         type,
         zone,
         weight: 0,
         status: "Active",
         x,
         y,
-        lastMovedAt: Date.now(),
-        history: [{ x, y, time: Date.now() }],
+        lastMovedAt: now,
+        lastSeenAt: now,
+        history: [{ x, y, time: now }],
       },
     ]);
   }

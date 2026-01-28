@@ -1,36 +1,75 @@
 "use client";
 
+import { Paper, Typography, Box } from "@mui/material";
+
 interface Props {
   title: string;
   value: string | number;
   status?: "ok" | "warn" | "neutral";
 }
 
-export default function StatsCard({ title, value, status = "neutral" }: Props) {
+export default function StatsCard({
+  title,
+  value,
+  status = "neutral",
+}: Props) {
   const color =
     status === "ok"
-      ? "text-success"
+      ? "success.main"
       : status === "warn"
-      ? "text-warning"
-      : "text-dark";
+      ? "warning.main"
+      : "text.primary";
 
   const indicator =
     status === "ok" ? "●" : status === "warn" ? "▲" : "■";
 
   return (
-    <div className="card h-100 shadow-sm border-0">
-      <div className="card-body py-2 px-3">
-        <div className="d-flex justify-content-between align-items-center">
-          <small className="text-muted">{title}</small>
-          <span className={`small fw-bold ${color}`}>
-            {indicator}
-          </span>
-        </div>
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2,
+        height: "100%",
+        border: "1px solid rgba(15,23,42,0.08)",
+        transition: "all 0.25s ease",
 
-        <div className={`fs-4 fw-semibold mt-1 ${color}`}>
-          {value}
-        </div>
-      </div>
-    </div>
+        "&:hover": {
+          boxShadow: "0 10px 24px rgba(15,23,42,0.1)",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{ color: "text.secondary", fontWeight: 500 }}
+        >
+          {title}
+        </Typography>
+
+        <Typography
+          variant="caption"
+          sx={{ color, fontWeight: 700 }}
+        >
+          {indicator}
+        </Typography>
+      </Box>
+
+      <Typography
+        variant="h5"
+        sx={{
+          mt: 0.5,
+          fontWeight: 700,
+          color,
+        }}
+      >
+        {value}
+      </Typography>
+    </Paper>
   );
 }
