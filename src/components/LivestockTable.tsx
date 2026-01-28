@@ -1,41 +1,42 @@
 "use client";
 
-import { livestockData } from "../data/mockLivestock";
+import { TrackedLivestock } from "../lib/useLivestockStore";
 
-export default function LivestockTable() {
+export default function LivestockTable({
+  animals,
+  getStatus,
+}: {
+  animals: TrackedLivestock[];
+  getStatus: (a: TrackedLivestock) => string;
+}) {
   return (
     <div className="table-responsive">
-      <table className="table table-hover align-middle">
-        <thead className="table-light">
+      <table className="table table-sm align-middle">
+        <thead>
           <tr>
             <th>ID</th>
             <th>Type</th>
             <th>Zone</th>
             <th>Status</th>
-            <th>Weight (kg)</th>
           </tr>
         </thead>
-
         <tbody>
-          {livestockData.map((animal) => (
-            <tr key={animal.id}>
-              <td>{animal.id}</td>
-              <td>{animal.type}</td>
-              <td>{animal.zone}</td>
-
+          {animals.map((a) => (
+            <tr key={a.id}>
+              <td>{a.id}</td>
+              <td>{a.type}</td>
+              <td>{a.zone}</td>
               <td>
                 <span
                   className={`badge ${
-                    animal.status === "Active"
+                    getStatus(a) === "Active"
                       ? "bg-success"
                       : "bg-warning text-dark"
                   }`}
                 >
-                  {animal.status}
+                  {getStatus(a)}
                 </span>
               </td>
-
-              <td>{animal.weight}</td>
             </tr>
           ))}
         </tbody>

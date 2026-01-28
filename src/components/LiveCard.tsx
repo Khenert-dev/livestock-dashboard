@@ -15,57 +15,41 @@ export default function LiveCard({
   status,
   liveTime,
 }: Props) {
-  const [time, setTime] = useState<string>("—");
+  const [time, setTime] = useState("—");
 
   useEffect(() => {
     if (!liveTime) return;
-
-    const update = () => setTime(new Date().toLocaleTimeString());
-    update();
-
-    const i = setInterval(update, 1000);
+    const tick = () => setTime(new Date().toLocaleTimeString());
+    tick();
+    const i = setInterval(tick, 1000);
     return () => clearInterval(i);
   }, [liveTime]);
 
-  const borderClass =
+  const color =
     status === "ok"
-      ? "border-success"
+      ? "text-success"
       : status === "warn"
-      ? "border-warning"
-      : "border-secondary";
+      ? "text-warning"
+      : "text-dark";
 
-  const bgClass =
-    status === "ok"
-      ? "bg-success bg-opacity-10"
-      : status === "warn"
-      ? "bg-warning bg-opacity-10"
-      : "bg-light";
+  const indicator =
+    status === "ok" ? "●" : status === "warn" ? "▲" : "■";
 
   return (
-    <div
-      className={`card h-100 shadow-sm ${borderClass} ${bgClass}`}
-      role="status"
-      aria-label={label}
-    >
-      <div className="card-body d-flex flex-column justify-content-between">
-        <div>
+    <div className="card h-100 shadow-sm border-0">
+      <div className="card-body py-2 px-3">
+        <div className="d-flex justify-content-between align-items-center">
           <small className="text-muted">{label}</small>
-          <h3 className="fw-bold mt-1" aria-live="polite">
-            {liveTime ? time : value}
-          </h3>
+          {status && (
+            <span className={`small fw-bold ${color}`}>
+              {indicator}
+            </span>
+          )}
         </div>
 
-        {status === "ok" && (
-          <span className="badge bg-success align-self-start">
-            ✔ Active
-          </span>
-        )}
-
-        {status === "warn" && (
-          <span className="badge bg-warning text-dark align-self-start">
-            ⚠ Needs Check
-          </span>
-        )}
+        <div className={`fs-4 fw-semibold mt-1 ${color}`} aria-live="polite">
+          {liveTime ? time : value}
+        </div>
       </div>
     </div>
   );
